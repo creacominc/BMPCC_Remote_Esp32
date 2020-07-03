@@ -103,6 +103,10 @@ public:
     // this probably only works on the Serial Monitor.
     uint32_t pin = 0;
     Serial.println("Enter pass key from device: ");
+    while( ! Serial.available() )
+    {
+      delay(1);
+    }
     if( Serial.available() > 0 )
     {
       pin = Serial.parseInt();
@@ -262,15 +266,6 @@ void timecodeNotifyCallback( BLERemoteCharacteristic* pBLERemoteCharacteristic, 
   Serial.println( length );
   Serial.print("    isNotify: ");
   Serial.println( isNotify );
-//  char *pChars = (char *)pData;
-//  char buffer[8];
-//  memset( buffer, 0, 8 );
-//  sprintf( buffer, "%0X:%0X:%0X:%0X", pChars[0], pChars[1], pChars[2], pChars[3] );
-//  Serial.print("    timecode: ");
-//  Serial.println( buffer );
-//  sprintf( buffer, "%0X", pData );
-//  Serial.print("    at: ");
-//  Serial.println( buffer );
 }
 
 
@@ -308,11 +303,6 @@ bool getConnected()
 
   pBLEClient->setClientCallbacks( new BMPCCBLEClientCallbacks() );
   pBLEClient->connect( pBMPCC_Camera );
-
-  /**
-   * @TODO:  Determine what an MTU is.
-   */
-  BLEDevice::setMTU(BLEDevice::getMTU());
 
   listServices( pBLEClient );
 
@@ -486,12 +476,16 @@ uint8_t record[] =   {255, // broadcast
 typedef enum { BROADCAST_POS=0, LENGTH_POS, COMMAND_ID_POS, RESERVED_POS, CATEGORY_POS, PARAMETER_POS, 
                 DATA_TYPE_POS, OPERATION_TYPE_POS, DATA_0_POS, DATA_1_POS, DATA_2_POS, DATA_3_POS } DATA_t;
 typedef enum { PREVIEW=0, PLAY=1, RECORD=2 } TRANSPORT_MODE_t;
-void setRecord(boolean RecOn)
+void setRecordState(boolean state)
 {
-  if (!RecOn)
+  if (!state)
+  {
     record[8] = PREVIEW;
+  }
   else
+  {
     record[8] = RECORD;
+  }
   pBMPCC_cameraOutControlCharacteristic->writeValue((uint8_t*)record, 16, true);
 }
 
@@ -556,10 +550,10 @@ void loop()
     {
       lightState = (lightState == LOW ? HIGH : LOW);
       digitalWrite(LED_PIN, lightState);
-      Serial.println("  Changed record state: ");
+      Serial.print("  Changed record state: ");
       Serial.println( lightState );
       switchState = false;
-      setRecord( lightState );
+      setRecordState( lightState );
     }
   }
   else
