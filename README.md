@@ -10,3 +10,8 @@ This code is based on examples and data from:
                        - https://github.com/espressif/arduino-esp32/blob/master/libraries/BLE/examples/BLE_client/BLE_client.ino
    - Blackmagic Design - https://www.blackmagicdesign.com/developer/product/camera, https://www.bhphotovideo.com/lit_files/452872.pdf
 
+## Next Steps:
+* Add a method for entering the code from an iPhone;
+* Test the battery charging circuit;
+* Add a case that can mount on the gimbal;
+* Add an external button;
