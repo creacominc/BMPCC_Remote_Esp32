@@ -1,9 +1,9 @@
 #include <BLEDevice.h>
 #include <BLEUtils.h>
 #include <BLEScan.h>
-#include <BLEAdvertisedDevice.h>
 #include <string>
 
+#include "BMPCCAdvertisedDeviceCallbacks.h"
 
 /**
  * This code is based on examples and data from:
@@ -63,28 +63,6 @@ static BLERemoteCharacteristic *pBMPCC_cameraOutControlCharacteristic = NULL;
 static BLERemoteCharacteristic *pBMPCC_cameraInControlCharacteristic = NULL;
 
 static uint32_t camera_PIN = 0;
-
-/**
- * For each advertised device, check to see if it is a BMPCC camera.
- */
-class BMPCCAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks
-{
-  void onResult(BLEAdvertisedDevice advertisedDevice)
-  {
-    Serial.print("BLE Advertised Device found: ");
-    Serial.println(advertisedDevice.toString().c_str());
-    // We have found a device, let us now see if it contains the service we are looking for.
-    if (advertisedDevice.haveServiceUUID()
-        && advertisedDevice.isAdvertisingService( BMPCC_cameraControlServiceUUID )) 
-    {
-      // stop scanning
-      BLEDevice::getScan()->stop();
-      Serial.println("found camera.");
-      pBMPCC_Camera = new BLEAdvertisedDevice( advertisedDevice );
-      deviceFound = true;
-    }
-  }
-};
 
 
 /**
@@ -506,7 +484,7 @@ void setup()
   // get scan object
   BLEScan* pBLEScan = BLEDevice::getScan();
   // set callback
-  pBLEScan->setAdvertisedDeviceCallbacks(new BMPCCAdvertisedDeviceCallbacks());
+  pBLEScan->setAdvertisedDeviceCallbacks(new BMPCCAdvertisedDeviceCallbacks( &pBMPCC_Camera, &deviceFound, BMPCC_cameraControlServiceUUID ));
   pBLEScan->setInterval(SCAN_INTERVAL);
   pBLEScan->setWindow(SCAN_WINDOW);
   pBLEScan->setActiveScan(true);
