@@ -1,5 +1,4 @@
 #include "BMPCCSecurityCallback.h"
-
 #include <HardwareSerial.h>
 
 BMPCCSecurityCallback::BMPCCSecurityCallback()

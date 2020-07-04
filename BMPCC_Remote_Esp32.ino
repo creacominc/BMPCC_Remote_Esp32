@@ -5,6 +5,7 @@
 
 #include "BMPCCAdvertisedDeviceCallbacks.h"
 #include "BMPCCSecurityCallback.h"
+#include "BMPCCBLEClientCallbacks.h"
 
 /**
  * This code is based on examples and data from:
@@ -69,25 +70,6 @@ static uint32_t camera_PIN = 0;
 
 
 
-/**
- * 
- */
-class BMPCCBLEClientCallbacks : public BLEClientCallbacks
-{
-  virtual void onConnect(BLEClient *pClient)
-  {
-    Serial.println("Connected.");
-    connected = true;
-  }
-
-  virtual void onDisconnect(BLEClient *pClient)
-  {
-    connected = false;
-    pClient->disconnect();
-    Serial.println("Disconnected.");
-  }
-
-};
 
 
 /**
@@ -212,7 +194,7 @@ bool getConnected()
   pSecurity->setRespEncryptionKey(ESP_BLE_ENC_KEY_MASK | ESP_BLE_ID_KEY_MASK);
   BLEClient*  pBLEClient  = BLEDevice::createClient();
 
-  pBLEClient->setClientCallbacks( new BMPCCBLEClientCallbacks() );
+  pBLEClient->setClientCallbacks( new BMPCCBLEClientCallbacks( & connected ) );
   pBLEClient->connect( pBMPCC_Camera );
 
   listServices( pBLEClient );
