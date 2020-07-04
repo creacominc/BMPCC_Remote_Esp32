@@ -4,6 +4,7 @@
 #include <string>
 
 #include "BMPCCAdvertisedDeviceCallbacks.h"
+#include "BMPCCSecurityCallback.h"
 
 /**
  * This code is based on examples and data from:
@@ -64,74 +65,6 @@ static BLERemoteCharacteristic *pBMPCC_cameraInControlCharacteristic = NULL;
 
 static uint32_t camera_PIN = 0;
 
-
-/**
- * Security callback class handles the security requests from the service
- */
-class BMPCCSecurityCallback : public BLESecurityCallbacks
-{
-public:
-  /**
-   * @brief Its request from peer device to input authentication pin code displayed on peer device.
-   * It requires that our device is capable to input 6-digits code by end user
-   * @return Return 6-digits integer value from input device
-   */
-  virtual uint32_t onPassKeyRequest()
-  {
-    // this probably only works on the Serial Monitor.
-    uint32_t pin = 0;
-    Serial.println("Enter pass key from device: ");
-    while( ! Serial.available() )
-    {
-      delay(1);
-    }
-    if( Serial.available() > 0 )
-    {
-      pin = Serial.parseInt();
-      Serial.print(" pin: ");
-      Serial.println( pin );
-    }
-    Serial.print("Returning pass key: ");
-    Serial.println( pin );
-    return pin;
-  }
-
-  /**
-   * @brief Provide us 6-digits code to perform authentication.
-   * It requires that our device is capable to display this code to end user
-   * @param
-   */
-  virtual void onPassKeyNotify(uint32_t pass_key)
-  {
-    Serial.println("not providing pass key.");
-  }
-
-  /**
-   * @brief Here we can make decision if we want to let negotiate authorization with peer device or not
-   * return Return true if we accept this peer device request
-   */
-  virtual bool onSecurityRequest()
-  {
-    Serial.println("not allowing connection to this device.");
-    return false;
-  }
-
-  /**
-   * Provide us information when authentication process is completed
-   */
-  virtual void onAuthenticationComplete(esp_ble_auth_cmpl_t status)
-  {
-    Serial.print("Authentication Status: ");
-    Serial.println( status.success );
-  }
-
-  virtual bool onConfirmPIN(uint32_t pin)
-  {
-    Serial.print("PIN: ");
-    Serial.println(pin);
-    return (0 != pin);
-  }
-};
 
 
 
