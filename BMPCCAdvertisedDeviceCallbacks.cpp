@@ -7,7 +7,7 @@ BMPCCAdvertisedDeviceCallbacks::BMPCCAdvertisedDeviceCallbacks( BLEAdvertisedDev
                                                                 BLEUUID & _cameraControlServiceUUID )
   : BLEAdvertisedDeviceCallbacks()
   , m_Camera( _Camera )
-  , m_deviceFound( _deviceFound )
+  , m_pdeviceFound( _deviceFound )
   , m_cameraControlServiceUUID( _cameraControlServiceUUID )
 {
 }
@@ -29,6 +29,6 @@ void BMPCCAdvertisedDeviceCallbacks::onResult(BLEAdvertisedDevice advertisedDevi
     BLEDevice::getScan()->stop();
     Serial.println("found camera.");
     (*m_Camera) = new BLEAdvertisedDevice( advertisedDevice );
-    (*m_deviceFound) = true;
+    (*m_pdeviceFound) = true;
   }
 }

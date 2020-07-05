@@ -19,7 +19,7 @@ class BMPCCAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks
 
   private:
     BLEAdvertisedDevice ** m_Camera;
-    bool * m_deviceFound;
+    bool * m_pdeviceFound;
     BLEUUID & m_cameraControlServiceUUID;
 
 };
