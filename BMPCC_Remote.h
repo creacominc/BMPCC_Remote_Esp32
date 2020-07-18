@@ -2,6 +2,7 @@
 #define BMPCC_REMOTE_H
 
 #include "BMPCC_BlueTooth.h"
+#include "BMPCC_Wifi.h"
 
 /**
   Service: Device Information Service       UUID: 180A
@@ -19,31 +20,24 @@
   Protocol Version                          UUID: 8F1FD018-B508-456F-8F82-3D392BEE2706
 */
 
-
-
 class BMPCC_Remote
 {
-  public:
-    BMPCC_Remote( const int _BUTTON_PIN, const int _LED_PIN );
+public:
+    BMPCC_Remote(const int _BUTTON_PIN, const int _LED_PIN);
     virtual ~BMPCC_Remote();
 
     void setup();
     void control();
 
-  protected:
-
+protected:
     BMPCC_BlueTooth m_bmpcc_bluetooth;
+    BMPCC_Wifi m_bmpcc_wifi;
 
-
-  private:
+private:
     /** constants */
     const int BUTTON_PIN;
     const int LED_PIN;
     const int SCAN_TIME;
-
-
 };
-
-
 
 #endif

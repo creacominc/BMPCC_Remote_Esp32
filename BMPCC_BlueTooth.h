@@ -1,39 +1,41 @@
 #ifndef BMPCC_BLUETOOTH_H
 #define BMPCC_BLUETOOTH_H
 
+#include <map>
+
 #include <BLEClient.h>
 #include <BLERemoteService.h>
 #include <BLERemoteCharacteristic.h>
 #include <BLEAdvertisedDevice.h>
 
+#include "BMPCCAdvertisedDeviceCallbacks.h"
+
 class BMPCC_BlueTooth
 {
-  public:
+public:
     BMPCC_BlueTooth();
     virtual ~BMPCC_BlueTooth();
 
-    void setup( const int scan_time );
-    void control( const int scan_time, const int button_pin, const int led_pin );
+    void setup(const int scan_time);
+    void control(const int scan_time, const int button_pin, const int led_pin);
 
-
-  protected:
-    void listServices( BLEClient *pClient );
-    BLERemoteService * connectToService( BLEClient* pClient,  BLEUUID &uuid );
-    BLERemoteCharacteristic * getCharacteristic( BLERemoteService *pCameraInfoSvc,  BLEUUID &uuid );
+protected:
+    void listServices(BLEClient *pClient);
+    BLERemoteService *connectToService(BLEClient *pClient, BLEUUID &uuid);
+    BLERemoteCharacteristic *getCharacteristic(BLERemoteService *pCameraInfoSvc, BLEUUID &uuid);
 
     /** callbacks */
-    static void cameraStatusNotifyCallback( BLERemoteCharacteristic* pBLERemoteCharacteristic
-                                            , uint8_t* pData, size_t length, bool isNotify );
-    static void timecodeNotifyCallback( BLERemoteCharacteristic* pBLERemoteCharacteristic
-                                        , uint8_t* pData, size_t length, bool isNotify );
-    static void cameraInControlNotifyCallback( BLERemoteCharacteristic* pBLERemoteCharacteristic
-        , uint8_t* pData, size_t length, bool isNotify );
+    static void cameraStatusNotifyCallback(BLERemoteCharacteristic *pBLERemoteCharacteristic, uint8_t *pData, size_t length, bool isNotify);
+    static void timecodeNotifyCallback(BLERemoteCharacteristic *pBLERemoteCharacteristic, uint8_t *pData, size_t length, bool isNotify);
+    static void cameraInControlNotifyCallback(BLERemoteCharacteristic *pBLERemoteCharacteristic, uint8_t *pData, size_t length, bool isNotify);
 
-    bool getConnected();
+    bool confirmBMPCC(BLEClient *pBLEClient);
+    bool getConnected(const std::string &addr, BLEAdvertisedDevice *pDevice);
     void setRecordState(bool state);
 
+    bool selectCamera();
 
-  private:
+private:
     /** constants */
     const std::string DEVICE_NAME;
     const int SCAN_INTERVAL;
@@ -55,8 +57,12 @@ class BMPCC_BlueTooth
     BLEUUID m_BMPCC_deviceNameCharacteristicUUID;
     BLEUUID m_BMPCC_protocolVersionCharacteristicUUID;
 
+    /** callback */
+    BMPCCAdvertisedDeviceCallbacks *m_pAdvertisedDeviceCallback;
+
     /** bluetooth device */
-    BLEAdvertisedDevice * m_pBMPCC_Camera;
+    CameraMap_t m_BMPCC_Cameras;
+    int m_deviceIndex;
     bool m_deviceFound;
 
     /** status */
@@ -65,8 +71,6 @@ class BMPCC_BlueTooth
 
     BLERemoteCharacteristic *m_pBMPCC_cameraOutControlCharacteristic;
     BLERemoteCharacteristic *m_pBMPCC_cameraInControlCharacteristic;
-
-
 };
 
 #endif
