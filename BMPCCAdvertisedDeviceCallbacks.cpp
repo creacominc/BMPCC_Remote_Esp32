@@ -1,13 +1,16 @@
 #include "BMPCCAdvertisedDeviceCallbacks.h"
+
+#include <functional>
+
+#include <BLEAddress.h>
 #include <HardwareSerial.h>
 #include <BLEDevice.h>
 
-BMPCCAdvertisedDeviceCallbacks::BMPCCAdvertisedDeviceCallbacks( BLEAdvertisedDevice ** _Camera,
-                                                                bool * _deviceFound,
+
+BMPCCAdvertisedDeviceCallbacks::BMPCCAdvertisedDeviceCallbacks( CameraMap_t & _Cameras,
                                                                 BLEUUID & _cameraControlServiceUUID )
   : BLEAdvertisedDeviceCallbacks()
-  , m_Camera( _Camera )
-  , m_pdeviceFound( _deviceFound )
+  , m_Cameras( _Cameras )
   , m_cameraControlServiceUUID( _cameraControlServiceUUID )
 {
 }
@@ -17,7 +20,7 @@ BMPCCAdvertisedDeviceCallbacks::~BMPCCAdvertisedDeviceCallbacks()
 }
 
 
-void BMPCCAdvertisedDeviceCallbacks::onResult(BLEAdvertisedDevice advertisedDevice)
+void BMPCCAdvertisedDeviceCallbacks::onResult( BLEAdvertisedDevice advertisedDevice )
 {
   Serial.print("BLE Advertised Device found: ");
   Serial.println(advertisedDevice.toString().c_str());
@@ -25,10 +28,14 @@ void BMPCCAdvertisedDeviceCallbacks::onResult(BLEAdvertisedDevice advertisedDevi
   if (advertisedDevice.haveServiceUUID()
       && advertisedDevice.isAdvertisingService( m_cameraControlServiceUUID ))
   {
-    // stop scanning
-    BLEDevice::getScan()->stop();
-    Serial.println("found camera.");
-    (*m_Camera) = new BLEAdvertisedDevice( advertisedDevice );
-    (*m_pdeviceFound) = true;
+    Serial.println("found a camera.");
+    BLEAddress address( advertisedDevice.getAddress() );
+    std::string addressStr( address.toString() );
+    std::string msg = "Camera address: " + addressStr;
+    Serial.println( msg.c_str() );
+    if( m_Cameras.end() == m_Cameras.find( addressStr ) )
+    {
+      m_Cameras[ addressStr ] = new BLEAdvertisedDevice( advertisedDevice );
+    }
   }
 }

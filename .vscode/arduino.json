@@ -1,6 +1,6 @@
 {
     "sketch": "BMPCC_Remote_Esp32.ino",
-    "board": "esp8266:esp8266:thingdev",
-    "configuration": "xtal=80,vt=flash,exception=legacy,ssl=all,eesz=512K32,ip=lm2f,dbg=Disabled,lvl=None____,wipe=none,baud=115200",
+    "board": "espressif:esp32:esp32thing",
+    "configuration": "FlashFreq=80,PartitionScheme=default,UploadSpeed=115200,DebugLevel=warn",
     "port": "/dev/tty.usbserial-D307002C"
 }

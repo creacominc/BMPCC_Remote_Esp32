@@ -3,23 +3,23 @@
 
 #include <BLEAdvertisedDevice.h>
 
+typedef std::map< std::string, BLEAdvertisedDevice * > CameraMap_t;
+
 /**
  * For each advertised device, check to see if it is a BMPCC camera.
  */
 class BMPCCAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks
 {
   public:
-    BMPCCAdvertisedDeviceCallbacks( BLEAdvertisedDevice ** _Camera,
-                                    bool * _deviceFound,
+    BMPCCAdvertisedDeviceCallbacks( CameraMap_t & _Cameras,
                                     BLEUUID & _cameraControlServiceUUID );
     virtual ~BMPCCAdvertisedDeviceCallbacks();
 
   protected:
-    virtual void onResult(BLEAdvertisedDevice advertisedDevice);
+    virtual void onResult( BLEAdvertisedDevice advertisedDevice );
 
   private:
-    BLEAdvertisedDevice ** m_Camera;
-    bool * m_pdeviceFound;
+    CameraMap_t & m_Cameras;
     BLEUUID & m_cameraControlServiceUUID;
 
 };

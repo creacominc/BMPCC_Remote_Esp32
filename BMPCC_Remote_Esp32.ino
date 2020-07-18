@@ -11,33 +11,32 @@
  * - Blackmagic Design - https://www.blackmagicdesign.com/developer/product/camera, https://www.bhphotovideo.com/lit_files/452872.pdf
  */
 
-const int BAUD_RATE  = 115200;
-const int LED_PIN    = 5;
-const int BUTTON_PIN = 0;
-
+const int BAUD_RATE = 115200;
+const int LED_PIN = 5;
+const int BUTTON_PIN = 16;
 
 /**
- * 
+ *
  */
-BMPCC_Remote bmpccRemote( BUTTON_PIN, LED_PIN );
+BMPCC_Remote bmpccRemote(BUTTON_PIN, LED_PIN);
 
 /**
  * setup the bluetooth client
  */
 void setup()
 {
-  // set up and test serial to the Sparkfun ESP32 Thing
-  Serial.begin(BAUD_RATE);
-  // initialize the LED pin as an output:
-  pinMode(LED_PIN, OUTPUT);
-  // initialize the pushbutton pin as an input:
-  pinMode(BUTTON_PIN, INPUT);
+    // set up and test serial to the Sparkfun ESP32 Thing
+    Serial.begin(BAUD_RATE);
+    // initialize the LED pin as an output:
+    pinMode(LED_PIN, OUTPUT);
+    // initialize the pushbutton pin as an input:
+    pinMode(BUTTON_PIN, INPUT);
 
-  bmpccRemote.setup();
+    bmpccRemote.setup();
 }
 
 void loop()
 {
-  bmpccRemote.control();
-  delay( 100 );
+    bmpccRemote.control();
+    delay(100);
 }
