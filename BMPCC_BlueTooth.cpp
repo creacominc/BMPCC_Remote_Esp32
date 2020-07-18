@@ -110,7 +110,6 @@ void BMPCC_BlueTooth::setup(const int scan_time)
 
 void BMPCC_BlueTooth::control(const int scan_time, const int button_pin, const int led_pin)
 {
-    Serial.println( " start control. " );
     if( ! m_connected )
     {
         // if not yet connected, try again
@@ -138,7 +137,7 @@ void BMPCC_BlueTooth::control(const int scan_time, const int button_pin, const i
     // First and simplest test is to flash the LED and respond to the button.
     static int buttonState = digitalRead( button_pin) ; // variable for reading the pushbutton status
     static int lightState = LOW;
-    static bool switchState = true;
+    static bool switchState = false;
     // check if the pushbutton is pressed. If it is, the buttonState is LOW:
     if( LOW == buttonState )
     {
@@ -156,7 +155,6 @@ void BMPCC_BlueTooth::control(const int scan_time, const int button_pin, const i
     {
         switchState = true;
     }
-    Serial.println( " done control. " );
     // read the state of the pushbutton value:
     buttonState = digitalRead(button_pin);
 }

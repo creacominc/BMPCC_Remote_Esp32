@@ -1,6 +1,6 @@
 {
     "sketch": "BMPCC_Remote_Esp32.ino",
     "board": "espressif:esp32:esp32thing",
-    "configuration": "FlashFreq=80,PartitionScheme=default,UploadSpeed=921600,DebugLevel=none",
+    "configuration": "FlashFreq=80,PartitionScheme=default,UploadSpeed=115200,DebugLevel=warn",
     "port": "/dev/tty.usbserial-D307002C"
 }

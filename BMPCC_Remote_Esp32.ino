@@ -16,7 +16,7 @@ const int LED_PIN = 5;
 const int BUTTON_PIN = 16;
 
 /**
- * 
+ *
  */
 BMPCC_Remote bmpccRemote(BUTTON_PIN, LED_PIN);
 
